@@ -26,10 +26,20 @@ public class Uebung15 {
         kette.fuegeRechtsAn(six);
         System.out.println(kette.toString());
         
-        kette.fuegeRechtsAn(fail);
-        System.out.println(kette.toString());
+        //kette.fuegeRechtsAn(fail);
+        //System.out.println(kette.toString());
     }
+
+    public static void task15_3() {
+        Schachstellung schach = new Schachstellung();
+        System.out.print(schach.toString());
+
+        schach.setzeSchachstellung("b22K24l28B23k66");
+        System.out.print(schach.toString());
+    }
+
     public static void main(String[] args) {
         task15_2();
+        task15_3();
     }
 }
