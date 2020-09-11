@@ -31,9 +31,8 @@ public class Schachstellung {
         String res = "" + horizontal;
 
         for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+            for (int j = 0; j < 8; j++)
                 res += "| " + (field[i][j] == '\u0000' ? " " : field[i][j]) + " ";
-            }
             res += "|\n";
             res += horizontal;
             
