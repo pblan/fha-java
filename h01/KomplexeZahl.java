@@ -1,8 +1,8 @@
-import java.util.Arrays;
+//import java.util.Arrays;
 
 /**
  * Describes a complex number z with it's corresponding real and imaginary parts
- * Handles addition, multiplication, square root, absolute value
+ * Handles addition, multiplication, nth roots, absolute value
  * 
  * @author Patrick Gustav Blaneck, Felix Racz, Tim Wende
  * @version 0.1
@@ -13,8 +13,8 @@ public class KomplexeZahl {
 
     /**
      * Creates a new KomplexeZahl
-     * @param real part
-     * @param imaginary part
+     * @param real real part
+     * @param imaginary imaginary part
      */
     public KomplexeZahl(double real, double imaginary) {
         this.real = real;
@@ -23,7 +23,7 @@ public class KomplexeZahl {
 
     /**
      * 
-     * @return real part of current KomplexeZahl (real value)
+     * @return real part of current KomplexeZahl
      */
     public double getReal() {
         return this.real;
@@ -31,7 +31,7 @@ public class KomplexeZahl {
 
     /**
      * 
-     * @param real part to set (real value)
+     * @param real real part to be set
      */
     public void setReal(double real) {
         this.real = real;
@@ -39,7 +39,7 @@ public class KomplexeZahl {
 
     /**
      * 
-     * @return imaginary part of current KomplexeZahl (real value)
+     * @return imaginary part of current KomplexeZahl
      */
     public double getImaginary() {
         return this.imaginary;
@@ -47,7 +47,7 @@ public class KomplexeZahl {
 
     /**
      * 
-     * @param imaginary part to set (real value)
+     * @param imaginary imaginary part to set
      */
     public void setImaginary(double imaginary) {
         this.imaginary = imaginary;
@@ -55,7 +55,7 @@ public class KomplexeZahl {
 
     /**
      * Adds a given KomplexeZahl onto the current KomplexeZahl
-     * @param KomplexeZahl to be added
+     * @param z KomplexeZahl to be added
      */
     public void addiere(KomplexeZahl z) {
         this.real += z.real;
@@ -65,7 +65,7 @@ public class KomplexeZahl {
     /**
      * Multiplies a given KomplexeZahl onto the current KomplexeZahl
      * z * z' = (x + iy) * (x' + iy') = (xx' - yy') + i(xy' - x'y)
-     * @param KomplexeZahl to be multiplied 
+     * @param z KomplexeZahl to be multiplied with
      */
     public void multipliziere(KomplexeZahl z) {
         double real = (this.real * z.real) - (this.imaginary * z.imaginary); 
@@ -76,7 +76,7 @@ public class KomplexeZahl {
 
     /**
      * Returns absolute value of current KomplexeZahl
-     * z := x + iy => abs(z) = sqrt(x^2 + y^2)
+     * z := x + iy implies abs(z) = sqrt(x^2 + y^2)
      * @return absolute value of current KomplexeZahl
      */
     public double getBetrag() {
@@ -93,12 +93,19 @@ public class KomplexeZahl {
 
     /**
      * Returns both square roots of the current KomplexeZahl
+     * Prinicipal root is at position 0
      * @return array containing the two square roots of current KomplexeZahl
      */
     public KomplexeZahl[] getWurzel() {
         return getWurzel(2);
     }
 
+    /**
+     * Returns all n roots of the current KomplexeZahl
+     * Prinicipal root is at position 0
+     * @param n radicant
+     * @return array containing the n roots of current KomplexeZahl
+     */
     public KomplexeZahl[] getWurzel(int n) {
         if (n < 1) throw new ArithmeticException("Please use a natural number, my dear.");
         double r, phi, real, imaginary;
@@ -118,7 +125,7 @@ public class KomplexeZahl {
 
     /**
      * Returns new KomplexeZahl which is the sum of current KomplexeZahl and given KomplexeZahl
-     * @param KomplexeZahl to be added
+     * @param z KomplexeZahl to be added
      * @return sum of current KomplexeZahl and given KomplexeZahl
      */
     public KomplexeZahl getSumme(KomplexeZahl z) {
@@ -129,7 +136,7 @@ public class KomplexeZahl {
 
     /**
      * Returns new KomplexeZahl which is the product of current KomplexeZahl and given KomplexeZahl
-     * @param KomplexeZahl to be multiplied with
+     * @param z KomplexeZahl to be multiplied with
      * @return product of current KomplexeZahl and given KomplexeZahl
      * */
     public KomplexeZahl getProdukt(KomplexeZahl z) {
