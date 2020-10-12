@@ -3,6 +3,9 @@ import java.util.Arrays;
 /**
  * Describes a complex number z with it's corresponding real and imaginary parts
  * Handles addition, multiplication, square root, absolute value
+ * 
+ * @author Patrick Gustav Blaneck, Felix Racz, Tim Wende
+ * @version 0.1
  */
 public class KomplexeZahl {
     private double real;
@@ -10,8 +13,8 @@ public class KomplexeZahl {
 
     /**
      * Creates a new KomplexeZahl
-     * @param real
-     * @param imaginary
+     * @param real part
+     * @param imaginary part
      */
     public KomplexeZahl(double real, double imaginary) {
         this.real = real;
@@ -77,7 +80,7 @@ public class KomplexeZahl {
      * @return absolute value of current KomplexeZahl
      */
     public double getBetrag() {
-        return Math.sqrt(this.real*this.real + this.imaginary*this.imaginary);
+        return Math.sqrt(this.real*this.real + this.imaginary*this.imaginary);  // return sqrt(x^2 + y^2)
     }
 
     public String toString() {
@@ -90,30 +93,25 @@ public class KomplexeZahl {
 
     /**
      * Returns both square roots of the current KomplexeZahl
-     * Returns 0 iff current KomplexeZahl equals 0
      * @return array containing the two square roots of current KomplexeZahl
      */
     public KomplexeZahl[] getWurzel() {
-        double abs, phi, real, imaginary;
-        KomplexeZahl[] res = new KomplexeZahl[2];
+        return getWurzel(2);
+    }
 
-        if (this.real == 0 && this.imaginary == 0) {
-            res[0] = new KomplexeZahl(0.0, 0.0);
-            res[1] = new KomplexeZahl(0.0, 0.0);
-            return res;
+    public KomplexeZahl[] getWurzel(int n) {
+        if (n < 1) throw new ArithmeticException("Please use a natural number, my dear.");
+        double r, phi, real, imaginary;
+        KomplexeZahl[] res = new KomplexeZahl[n];
+
+        r = Math.pow(this.getBetrag(), 1./n);                               // r := nth root(abs(z))
+        phi = Math.atan2(this.imaginary, this.real);                        // phi := arc length of z
+
+        for (int i = 0; i < n; i++) {
+            real = r * Math.cos((phi + 2 * i * Math.PI) / n);               // Moivre for k=i (real)
+            imaginary = r * Math.sin((phi + 2 * i * Math.PI) / n);          // Moivre for k=i (imaginary)
+            res[i] = new KomplexeZahl(real, imaginary);
         }
-                                                                        // z:= x + iy; z1 := sqrt(z); z2 := conjugated z1
-        abs = this.getBetrag();                                         // r := abs(z)
-        phi = Math.atan2(this.imaginary, this.real);                    // phi := arc length of z
-        real = Math.sqrt(abs) * Math.cos(phi/2);                        // R(z1) = sqrt(r) * cos(phi/2) <= Moivre for k=0
-        imaginary = Math.sqrt(abs) * Math.sin(phi/2);                   // I(z1) = sqrt(r) * sin(phi/2) <= Moivre for k=0
-
-        res[0] = new KomplexeZahl(real, imaginary);                     // res << z1
-
-        real = Math.sqrt(abs) * Math.cos((phi + 2* Math.PI)/2);         // R(z2) = sqrt(r) * cos((phi + 2pi)/2) <= Moivre for k=1
-        imaginary = Math.sqrt(abs) * Math.sin((phi + 2* Math.PI)/2);    // I(z2) = sqrt(r) * sin((phi + 2pi)/2) <= Moivre for k=1
-
-        res[1] = new KomplexeZahl(real, imaginary);                     // res << z2
 
         return res;
     }
@@ -140,6 +138,7 @@ public class KomplexeZahl {
         return res;
     }
 
+    /*
     public static void main(String[] args) {
         KomplexeZahl z = new KomplexeZahl(0,0);     // z := 0
         System.out.println("z = " + z);
@@ -166,4 +165,5 @@ public class KomplexeZahl {
         KomplexeZahl summe = z.getSumme(z2);        // z := z - z2 = 0
         System.out.println("summe = " + summe);
     }
+    */
 }
