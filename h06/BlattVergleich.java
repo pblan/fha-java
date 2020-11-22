@@ -1,36 +1,86 @@
 import java.util.*;
 
+/**
+ * Klasse, die Comparator<Blatt> implementiert und ein gewinnendes Blatt nach folgenden Regeln ermittelt:
+ * - Drilling schlägt Paar, Paar schlägt komplett unterschiedliche Karten.
+ * - Bei 2 Drillingen bzw. Paaren zählt das mit dem höheren Wert.
+ * - Bei 2 Paaren mit gleichem Wert zählt die 3. Karte.
+ * - Bei komplett unterschiedlichen Karten zählt die Summe der drei Karten. 
+ * 
+ * @author Patrick Gustav Blaneck, Felix Racz, Tim Wende
+ */
 public class BlattVergleich implements Comparator<Blatt> {
+
     /**
-     * 
-     * @param b1
-     * @param b2
-     * @return -1 => b1 > b2; 0 => b1 = b2; 1 => b1 < b2
+     * Gibt nach folgenden Regeln den Gewinner aus:
+     * - Drilling schlägt Paar, Paar schlägt komplett unterschiedliche Karten.
+     * - Bei 2 Drillingen bzw. Paaren zählt das mit dem höheren Wert.
+     * - Bei 2 Paaren mit gleichem Wert zählt die 3. Karte.
+     * - Bei komplett unterschiedlichen Karten zählt die Summe der drei Karten. 
+
+     * @param b1 Blatt von Spieler 1
+     * @param b2 Blatt von Spieler 2
+     * @return int > 0: Spieler 1 gewinnt, int < 0: Spieler 2 gewinnt, 0: unentschieden
      */
+    @Override
     public int compare(Blatt b1, Blatt b2) {
-        BlattEigenschaft isDrilling = a -> a[0] == a[1] && a[1] == a[2];
-        BlattEigenschaft isPaar = a -> (a[0] == a[1] || a[1] == a[2] || a[0] == a[2]) && !isDrilling.process(a);
-        BlattSumme summe = a -> a[0] + a[1] + a[2];
-        BlattSumme paarSumme = a -> a[0] == a[1] ? a[0] + a[1] : (a[0] == a[2] ? a[0] + a[2] : a[1] + a[2]);
-        BlattErgebnis ergebnis = (a, b) -> a == b ? 0 : (a < b ? -1 : 1);
+        int[] b1Karten, b2Karten;
+        b1Karten = b1.getKarten();
+        b2Karten = b2.getKarten();
 
-        int[] b1Cards, b2Cards;
-        b1Cards = b1.getKarten();
-        b2Cards = b2.getKarten();
+        if (isDrilling(b1Karten) && isDrilling(b2Karten))
+            return Integer.compare(b1Karten[0], b2Karten[0]);
+        else if (isDrilling(b1Karten)) return 1;
+        else if (isDrilling(b2Karten)) return -1;
 
-        if (isDrilling.process(b1Cards) && isDrilling.process(b2Cards))
-            return ergebnis.compare(summe.calc(b1Cards), summe.calc(b2Cards));
-        else if (isDrilling.process(b1Cards)) return 1;
-        else if (isDrilling.process(b2Cards)) return -1;
-
-        if (isPaar.process(b1Cards) && isPaar.process(b2Cards)) {
-            if (ergebnis.compare(paarSumme.calc(b1Cards), paarSumme.calc(b2Cards)) == 0)
-                return ergebnis.compare(summe.calc(b1Cards), summe.calc(b2Cards));
-            else return ergebnis.compare(paarSumme.calc(b1Cards), paarSumme.calc(b2Cards));
+        if (isPaar(b1Karten) && isPaar(b2Karten)) {
+            if (Integer.compare(getPaarWert(b1Karten), getPaarWert(b2Karten)) == 0) // Paarsummen gleich => Gesamtsummen entscheidend
+                return Integer.compare(getSumme(b1Karten), getSumme(b2Karten));
+            return Integer.compare(getPaarWert(b1Karten), getPaarWert(b2Karten));
         }
-        else if (isPaar.process(b1Cards)) return 1;
-        else if (isPaar.process(b2Cards)) return -1;
+        else if (isPaar(b1Karten)) return 1;
+        else if (isPaar(b2Karten)) return -1;
 
-        return ergebnis.compare(summe.calc(b1Cards), summe.calc(b2Cards));
+        return Integer.compare(getSumme(b1Karten), getSumme(b2Karten));
+    }
+
+    /**
+     * Gibt zurück, ob ein Blatt ein Drilling ist.
+     * 
+     * @param a Array, das ein Blatt modelliert
+     * @return false: ist kein Drilling, true: ist Drilling
+     */
+    public boolean isDrilling(int[] a) {
+        return a[0] == a[1] && a[1] == a[2];
+    }
+
+    /**
+     * Gibt zurück, ob ein Blatt ein Paar enthält und kein Drilling ist.
+     * 
+     * @param a Array, das ein Blatt modelliert
+     * @return false: enthält kein Paar oder ist Drilling, true: enthält Paar
+     */
+    public boolean isPaar(int[] a) {
+        return (a[0] == a[1] || a[1] == a[2] || a[0] == a[2]) && !isDrilling(a);
+    }
+
+    /**
+     * Gibt die Summe der Kartenwerte zurück.
+     * 
+     * @param a Array, das ein Blatt modelliert
+     * @return Summe des Arrays
+     */
+    public int getSumme(int[] a) {
+        return a[0] + a[1] + a[2];
+    }
+
+    /**
+     * Gibt die Summe der Kartenwerte des Paares zurück.
+     * 
+     * @param a Array, das ein Blatt modelliert
+     * @return -1: Blatt hat kein Paar, sonst: Summe der zwei gleichen Elemente
+     */
+    public int getPaarWert(int[] a) {
+        return (a[0] == a[1] || a[0] == a[2]) ? a[0] : (a[1] == a[2] ? a[1] : -1);
     }
 }
